@@ -345,8 +345,8 @@ function getSrcDest(type, name, parent) {
                 'templates/SubComponent/SubComponent.spec.js',
             ],
             dest: [
-                `src/${parent}/components/__name__/__name__.js`,
-                `src/${parent}/components/__name__/__name__.spec.js`,
+                `${parent}/components/__name__/__name__.js`,
+                `${parent}/components/__name__/__name__.spec.js`,
             ],
         };
     } else if (type === 'hook') {
@@ -371,14 +371,14 @@ function getSrcDest(type, name, parent) {
             ],
             dest: parent
                 ? [
-                      `src/${parent}/stores/__name__/__name__Store.js`,
-                      `src/${parent}/stores/__name__/__name__Store.md`,
-                      `src/${parent}/stores/__name__/__name__Store.spec.js`,
+                      `${parent}/stores/__name__/__name__Store.js`,
+                      `${parent}/stores/__name__/__name__Store.md`,
+                      `${parent}/stores/__name__/__name__Store.spec.js`,
                   ]
                 : [
-                      `src/stores/__name__/__name__Store.js`,
-                      `src/stores/__name__/__name__Store.md`,
-                      `src/stores/__name__/__name__Store.spec.js`,
+                      `stores/__name__/__name__Store.js`,
+                      `stores/__name__/__name__Store.md`,
+                      `stores/__name__/__name__Store.spec.js`,
                   ],
         };
     } else if (type === 'lib') {
