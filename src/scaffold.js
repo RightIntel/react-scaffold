@@ -8,6 +8,7 @@ const mkdir = require('make-dir');
 const template = require('lodash.template');
 // local functions
 const getSourceDir = require('./lib/getSourceDir.js');
+const getValidPermissions = require('./lib/getValidPermissions.js');
 
 main().catch(err => console.log('** Scaffold exception **\n', err));
 
@@ -62,7 +63,7 @@ async function main() {
         // get the list of pages
         let pages = fs.readdirSync(`${srcDir}/pages`);
         pages = [...pages].filter(isDir);
-        pages = pages.map(page => ({ title: `pages/${page}`, value: `pages/${page}` }));
+        pages = pages.map(page => ({ title: `pages/${page}`, value: `../pages/${page}` }));
         // get the list of components
         let components = fs.readdirSync(`${srcDir}/components`);
         components = [...components].filter(isDir);
@@ -171,7 +172,7 @@ async function main() {
         return;
     }
 
-    let chosenPath, pathVariables, pageTitle, pageSubtitle;
+    let chosenPath, pathVariables, pageTitle, pageSubtitle, pageDescription, pagePerms;
     if (chosenType === 'Page') {
         // ask for page url
         const { url } = await prompts({
@@ -220,6 +221,35 @@ async function main() {
             return;
         }
         pageSubtitle = subtitle;
+        // ask for page/route description
+        const { description } = await prompts({
+            type: 'text',
+            name: 'description',
+            message: 'Enter the description of this page/route, markdown is supported (Developer eyes only)',
+        });
+        if (!description) {
+            console.log('No files created.');
+            return;
+        }
+        pageDescription = JSON.stringify(description);
+        // ask user to give some permissions if applicable
+        const permissions = getValidPermissions();
+        if (permissions.length > 0) {
+            const { chosenPerms } = await prompts({
+                type: 'multiselect',
+                'name': 'chosenPerms',
+                message: 'Choose required user permissions (unless it is a public page)',
+                choices: permissions.map(p => ({ title: p, value: p })),
+            });
+            if (!chosenPerms) {
+                console.log('No files created.');
+                return;
+            }
+            pagePerms = JSON.stringify(chosenPerms);
+        }
+        else {
+            pagePerms = JSON.stringify([]);
+        }
     }
 
     const { src, dest } = getSrcDest(chosenType, chosenName, parent);
@@ -242,9 +272,15 @@ async function main() {
         const srcPath = `${__dirname}/../${src}`;
         const destPath = `${srcDir}/${dest[i]}`;
         let content = fs.readFileSync(srcPath, 'utf8');
+        // all files
         content = content.replace(/__name__/g, chosenName);
-        content = content.replace(/\*\*name\*\*/g, chosenName); // md files
+        // only md(x) files
+        content = content.replace(/\*\*name\*\*/g, chosenName);
+        // only Route.js files
         content = content.replace(/__path__/g, chosenPath);
+        content = content.replace(/__perms__/g, pagePerms);
+        content = content.replace(/__description__/g, pageDescription);
+        // only Page.js.tpl (use lodash templates)
         if (src.match(/\.tpl$/)) {
             content = template(content)({
                 type: chosenType,
@@ -311,15 +347,11 @@ function getSrcDest(type, name, parent) {
             src: [
                 'templates/Page/Page.css',
                 'templates/Page/Page.js.tpl',
-                'templates/Page/Page.md.tpl',
-                'templates/Page/Page.spec.js',
                 'templates/Page/Route.js',
             ],
             dest: [
                 'pages/__name__/__name__Page.css',
                 'pages/__name__/__name__Page.js',
-                'pages/__name__/__name__Page.md',
-                'pages/__name__/__name__Page.spec.js',
                 'pages/__name__/__name__Route.js',
             ],
         };
@@ -328,72 +360,83 @@ function getSrcDest(type, name, parent) {
             src: [
                 'templates/Component/Component.css',
                 'templates/Component/Component.js',
-                'templates/Component/Component.md',
                 'templates/Component/Component.spec.js',
+                'templates/Component/Component.stories.js',
             ],
             dest: [
                 'components/__name__/__name__.css',
                 'components/__name__/__name__.js',
-                'components/__name__/__name__.md',
                 'components/__name__/__name__.spec.js',
+                'components/__name__/__name__.stories.js',
             ],
         };
     } else if (type === 'SubComponent') {
         spec = {
             src: [
                 'templates/SubComponent/SubComponent.js',
-                'templates/SubComponent/SubComponent.spec.js',
             ],
             dest: [
                 `${parent}/components/__name__/__name__.js`,
-                `${parent}/components/__name__/__name__.spec.js`,
             ],
         };
     } else if (type === 'hook') {
         spec = {
             src: [
                 'templates/hook/useHook.js',
-                'templates/hook/useHook.md',
                 'templates/hook/useHook.spec.js',
+                'templates/hook/useHook.stories.js',
             ],
             dest: [
                 'hooks/__name__/__name__.js',
-                'hooks/__name__/__name__.md',
                 'hooks/__name__/__name__.spec.js',
+                'hooks/__name__/__name__.stories.js',
             ],
         };
     } else if (type === 'store') {
         spec = {
             src: [
                 'templates/store/store.js',
-                'templates/store/store.md',
+                'templates/store/store.mdx',
                 'templates/store/store.spec.js',
             ],
             dest: parent
                 ? [
                       `${parent}/stores/__name__/__name__Store.js`,
-                      `${parent}/stores/__name__/__name__Store.md`,
+                      `${parent}/stores/__name__/__name__Store.mdx`,
                       `${parent}/stores/__name__/__name__Store.spec.js`,
                   ]
                 : [
                       `stores/__name__/__name__Store.js`,
-                      `stores/__name__/__name__Store.md`,
+                      `stores/__name__/__name__Store.mdx`,
                       `stores/__name__/__name__Store.spec.js`,
                   ],
         };
-    } else if (type === 'lib') {
+    } else if (type === 'lib' && name.match(/^[A-Z]/)) {
         // if name starts with a capital letter, assume it is a class
-        const libType = name.match(/^[A-Z]/) ? 'class' : 'function';
         spec = {
             src: [
-                `scaffolds/lib/${libType}.js`,
-                'templates/lib/lib.md',
+                'templates/lib/class.js',
                 'templates/lib/lib.spec.js',
+                'templates/lib/class.stories.mdx',
             ],
             dest: [
                 'libs/__name__/__name__.js',
-                'libs/__name__/__name__.md',
                 'libs/__name__/__name__.spec.js',
+                'libs/__name__/__name__.stories.mdx',
+            ],
+        };
+    } else if (type === 'lib') {
+        // other lib names must be functions
+        spec = {
+            src: [
+                'templates/lib/function.js',
+                'templates/lib/lib.spec.js',
+                'templates/lib/function.stories.js',
+            ],
+            dest: [
+                'libs/__name__/__name__.js',
+                'libs/__name__/__name__.spec.js',
+                'libs/__name__/__name__.stories.js',
             ],
         };
     } else {

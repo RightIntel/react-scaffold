@@ -23,6 +23,10 @@ export default __name__Store;
 // Functions only beyond this point
 //
 
+/**
+ * TODO: add docs
+ * @param {Number} id
+ */
 function loadData(id) {
     const { state, setState } = __name__Store;
     api.get(`/foobar/${state.a}/${id}`).then(
@@ -31,6 +35,10 @@ function loadData(id) {
     );
 }
 
+/**
+ * TODO: add docs
+ * @param {Promise<Boolean>} newThing
+ */
 function createSomething(newThing) {
     const { state, setState } = __name__Store;
     api.post(`/foobar/${state.a}`, newThing).then(

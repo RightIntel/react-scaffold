@@ -3,6 +3,7 @@ import React from 'react';
 import __name__ from './__name__.js';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { Example } from './Component.stories.js';
 // --- Docs on react testing ---
 // getByText(), getAllByText(), etc.; fireEvent; act()
 // https://testing-library.com/docs/react-testing-library/cheatsheet
@@ -17,13 +18,13 @@ describe('__name__', () => {
     it('should be a function', () => {
         expect(__name__).toBeInstanceOf(Function);
     });
-    // TODO: add tests then delete this comment
     it('should render correctly', () => {
-        const { container } = render(<__name__ />);
+        const { container } = render(<Example />);
         expect(container).toMatchSnapshot();
     });
-    it('should respond to clicks', () => {
-        const { container, getByText } = render(<__name__ />);
+    // TODO: add tests then delete this comment
+    it('EXAMPLE: should respond to clicks', () => {
+        const { container, getByText } = render(<Example />);
         fireEvent.click(getByText('One'));
         expect(getByText('One')).toHaveClass('open');
         expect(container).toMatchSnapshot();

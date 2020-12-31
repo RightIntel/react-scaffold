@@ -3,7 +3,7 @@ import useApiGet from '../../libs/api/hooks/useApiGet/useApiGet.js';
 import ensure from '../../libs/ensure/ensure.js';
 
 /**
- * Use data from ...
+ * TODO: add description
  * @param {String} arg1
  * @param {Number} arg2
  * @returns {Object}  Stuff
