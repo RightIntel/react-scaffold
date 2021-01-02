@@ -3,7 +3,7 @@ import React from 'react';
 import __name__ from './__name__.js';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { Example } from './Component.stories.js';
+import { Example } from './__name__.stories.js';
 // --- Docs on react testing ---
 // getByText(), getAllByText(), etc.; fireEvent; act()
 // https://testing-library.com/docs/react-testing-library/cheatsheet

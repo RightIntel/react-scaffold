@@ -38,8 +38,8 @@ __name__.propTypes = {
     value: PropTypes.string,
     /** TODO: add comment for Storybook */
     setValue: PropTypes.func.isRequired,
-    /** TODO: add comment for Storybook */
+    /** An additional className to apply to this component */
     className: PropTypes.string,
-    /** TODO: add comment for Storybook */
+    /** Child elements */
     children: PropTypes.node.isRequired,
 };
