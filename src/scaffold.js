@@ -50,6 +50,11 @@ async function main() {
                 description: 'A store with state and actions',
                 value: 'store',
             },
+            {
+                title: 'svg',
+                description: 'A Component that wraps an SVG image',
+                value: 'svg',
+            },
         ],
     });
 
@@ -139,6 +144,7 @@ async function main() {
                 hook: 'Hook name? (must start with "use")',
                 lib: 'Lib name? (use PascalCase for classes, camelCase for functions)',
                 store: 'Store name? (use camelCase)',
+                svg: 'Component name? (must start with "Svg")'
             }[chosenType];
         },
         validate: function(name) {
@@ -153,6 +159,9 @@ async function main() {
             }
             if (chosenType === 'Page' && name.match(/Page$/)) {
                 return 'Page cannot end with "Page".';
+            }
+            if (chosenType === 'svg' && name.match(/^Svg/)) {
+                return 'Svg Components must start with "Svg".';
             }
             if (['Page', 'Component', 'SubComponent'].includes(chosenType)) {
                 if (!name.match(/^[A-Z]/)) {
@@ -172,7 +181,7 @@ async function main() {
         return;
     }
 
-    let chosenPath, pathVariables, pageTitle, pageSubtitle, pageDescription, pagePerms;
+    let chosenPath, pathVariables, pageTitle, pageSubtitle, pageDescription, pagePerms, svgWidth, svgHeight;
     if (chosenType === 'Page') {
         // ask for page url
         const { url } = await prompts({
@@ -251,6 +260,30 @@ async function main() {
             pagePerms = JSON.stringify([]);
         }
     }
+    if (chosenType === 'svg') {
+        const { width } = await prompts({
+            type: 'text',
+            name: 'width',
+            message: 'Default width',
+            initial: '32',
+        });
+        if (typeof width !== 'string' || width.length === 0) {
+            console.log('No files created.');
+            return;
+        }
+        svgWidth = width;
+        const { height } = await prompts({
+            type: 'text',
+            name: 'height',
+            message: 'Default height',
+            initial: '32',
+        });
+        if (typeof height !== 'string' || height.length === 0) {
+            console.log('No files created.');
+            return;
+        }
+        svgHeight = height;
+    }
 
     const { src, dest } = getSrcDest(chosenType, chosenName, parent);
     console.log(chalk.yellow('The following files will be created'));
@@ -280,6 +313,9 @@ async function main() {
         content = content.replace(/__path__/g, chosenPath);
         content = content.replace(/__perms__/g, pagePerms);
         content = content.replace(/__description__/g, pageDescription);
+        // only Svg Components
+        content = content.replace(/__width__/g, svgWidth);
+        content = content.replace(/__height__/g, svgHeight);
         // only Page.js.tpl (use lodash templates)
         if (src.match(/\.tpl$/)) {
             content = template(content)({
@@ -437,6 +473,16 @@ function getSrcDest(type, name, parent) {
                 'libs/__name__/__name__.js',
                 'libs/__name__/__name__.spec.js',
                 'libs/__name__/__name__.stories.js',
+            ],
+        };
+    } else if (type === 'svg') {
+        // other lib names must be functions
+        spec = {
+            src: [
+                'templates/svg/SvgComponent.js',
+            ],
+            dest: [
+                'components/Svg/__name__.js',
             ],
         };
     } else {
