@@ -1,5 +1,5 @@
 {
-  "name": "react-scaffold",
+  "name": "sh-react-scaffold",
   "version": "1.0.1",
   "description": "Scaffolder for react components",
   "main": "index.js",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/RightIntel/react-scaffold.git"
   },
-  "author": "",
+  "author": "Ken Snyder <kendsnyder@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/RightIntel/react-scaffold/issues"
@@ -23,6 +23,6 @@
     "chalk": "^4.1.0",
     "lodash.template": "^4.5.0",
     "make-dir": "^3.1.0",
-    "prompts": "^2.3.2"
+    "prompts": "^2.4.0"
   }
 }
