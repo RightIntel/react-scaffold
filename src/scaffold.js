@@ -285,7 +285,7 @@ async function main() {
     }
 
     const { src, dest } = getSrcDest(chosenType, chosenName, parent);
-    console.log(chalk.yellow('The following files will be created'));
+    console.log(chalk.yellow('The following files will be created:'));
     console.log(chalk.cyan(dest.join('\n')));
 
     const { confirmed } = await prompts({
@@ -436,9 +436,9 @@ function getSrcDest(type, name, parent) {
             ],
             dest: parent
                 ? [
-                      `${parent}/stores/__name__/__name__Store.js`,
-                      `${parent}/stores/__name__/__name__Store.mdx`,
-                      `${parent}/stores/__name__/__name__Store.spec.js`,
+                      `src/${parent}/stores/__name__/__name__Store.js`,
+                      `src/${parent}/stores/__name__/__name__Store.mdx`,
+                      `src/${parent}/stores/__name__/__name__Store.spec.js`,
                   ]
                 : [
                       `stores/__name__/__name__Store.js`,
