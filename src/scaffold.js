@@ -90,7 +90,7 @@ async function main() {
             return;
         }
         parent = chosen.parent;
-        mkdir.sync(`${srcDir}/src/${parent}/components`);
+        mkdir.sync(`${srcDir}/${parent}/components`);
     }
     if (chosenType === 'store') {
         const reusability = await prompts({
@@ -411,7 +411,7 @@ function getSrcDest(type, name, parent) {
                 'templates/SubComponent/SubComponent.js',
             ],
             dest: [
-                `src/${parent}/components/__name__.js`,
+                `${parent}/components/__name__.js`,
             ],
         };
     } else if (type === 'hook') {
@@ -436,9 +436,9 @@ function getSrcDest(type, name, parent) {
             ],
             dest: parent
                 ? [
-                      `src/${parent}/stores/__name__/__name__Store.js`,
-                      `src/${parent}/stores/__name__/__name__Store.mdx`,
-                      `src/${parent}/stores/__name__/__name__Store.spec.js`,
+                      `${parent}/stores/__name__/__name__Store.js`,
+                      `${parent}/stores/__name__/__name__Store.mdx`,
+                      `${parent}/stores/__name__/__name__Store.spec.js`,
                   ]
                 : [
                       `stores/__name__/__name__Store.js`,
