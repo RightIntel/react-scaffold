@@ -116,7 +116,6 @@ async function main() {
             }));
             // prompt to choose one
             const choices = [...pages, ...components];
-            // TODO: also allow choosing subcomponents!!
             const chosen = await prompts({
                 type: 'autocomplete',
                 name: 'parent',
@@ -349,7 +348,7 @@ async function main() {
         );
     } else if (chosenType === 'SubComponent' && parent.match(/^pages\//)) {
         const [, pageName] = parent.split('/');
-        const pagePath = `${srcDir}/src/pages/${pageName}/${pageName}Page.js`;
+        const pagePath = `${srcDir}/${parent}/${pageName}Page.js`;
         let pageContents = fs.readFileSync(pagePath, 'utf8');
         let pageParts = pageContents.split('\nimport');
         const idx = pageParts.length - 1;
@@ -362,7 +361,7 @@ async function main() {
         console.log(`✔ Imported SubComponent into src/pages/${pageName}/${pageName}Page.js.`);
     } else if (chosenType === 'SubComponent' && parent.match(/^components\//)) {
         const [, parentName] = parent.split('/');
-        const componentPath = `${srcDir}/src/components/${parentName}/${parentName}.js`;
+        const componentPath = `${srcDir}/${parent}/${parentName}.js`;
         let componentContents = fs.readFileSync(componentPath, 'utf8');
         let componentParts = componentContents.split('\nimport');
         const idx = componentParts.length - 1;
@@ -412,7 +411,7 @@ function getSrcDest(type, name, parent) {
                 'templates/SubComponent/SubComponent.js',
             ],
             dest: [
-                `${parent}/components/__name__.js`,
+                `src/${parent}/components/__name__.js`,
             ],
         };
     } else if (type === 'hook') {
