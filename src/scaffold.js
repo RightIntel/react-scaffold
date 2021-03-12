@@ -68,7 +68,7 @@ async function main() {
         // get the list of pages
         let pages = fs.readdirSync(`${srcDir}/pages`);
         pages = [...pages].filter(isDir);
-        pages = pages.map(page => ({ title: `pages/${page}`, value: `../pages/${page}` }));
+        pages = pages.map(page => ({ title: `pages/${page}`, value: `pages/${page}` }));
         // get the list of components
         let components = fs.readdirSync(`${srcDir}/components`);
         components = [...components].filter(isDir);
@@ -301,9 +301,9 @@ async function main() {
     }
 
     src.forEach((src, i) => {
-        const srcPath = `${__dirname}/../${src}`;
+        const tplPath = `${__dirname}/../${src}`;
         const destPath = `${srcDir}/${dest[i]}`;
-        let content = fs.readFileSync(srcPath, 'utf8');
+        let content = fs.readFileSync(tplPath, 'utf8');
         // all files
         content = content.replace(/__name__/g, chosenName);
         // only md(x) files
