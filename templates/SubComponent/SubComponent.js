@@ -17,8 +17,8 @@ export default function __name__({ value = '', setValue = () => {} }) {
 }
 
 __name__.propTypes = {
-    /** TODO: add comment for Storybook */
+    /** TODO: explain this prop */
     value: PropTypes.string,
-    /** TODO: add comment for Storybook */
+    /** TODO: explain this prop */
     setValue: PropTypes.func.isRequired,
 };

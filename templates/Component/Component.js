@@ -9,6 +9,9 @@ import PropTypes from 'prop-types';
 import './__name__.css';
 // TODO: delete comments above this line
 
+/**
+ * &lt;__name__ /&gt; is... TODO: explain this component in markdown for Storybook
+ */
 export default function __name__({
     value = '',
     setValue = () => {},
@@ -34,9 +37,9 @@ export default function __name__({
 }
 
 __name__.propTypes = {
-    /** TODO: add comment for Storybook */
+    /** TODO: explain this prop for Storybook */
     value: PropTypes.string,
-    /** TODO: add comment for Storybook */
+    /** TODO: explain this prop for Storybook */
     setValue: PropTypes.func.isRequired,
     /** An additional className to apply to this component */
     className: PropTypes.string,

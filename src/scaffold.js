@@ -90,7 +90,7 @@ async function main() {
             return;
         }
         parent = chosen.parent;
-        mkdir.sync(`${srcDir}/${parent}/components`);
+        mkdir.sync(`${srcDir}/src/${parent}/components`);
     }
     if (chosenType === 'store') {
         const reusability = await prompts({
@@ -160,7 +160,7 @@ async function main() {
             if (chosenType === 'Page' && name.match(/Page$/)) {
                 return 'Page cannot end with "Page".';
             }
-            if (chosenType === 'svg' && name.match(/^Svg/)) {
+            if (chosenType === 'svg' && !name.match(/^Svg/)) {
                 return 'Svg Components must start with "Svg".';
             }
             if (['Page', 'Component', 'SubComponent'].includes(chosenType)) {
@@ -349,26 +349,26 @@ async function main() {
         );
     } else if (chosenType === 'SubComponent' && parent.match(/^pages\//)) {
         const [, pageName] = parent.split('/');
-        const pagePath = `${srcDir}/pages/${pageName}/${pageName}Page.js`;
+        const pagePath = `${srcDir}/src/pages/${pageName}/${pageName}Page.js`;
         let pageContents = fs.readFileSync(pagePath, 'utf8');
         let pageParts = pageContents.split('\nimport');
         const idx = pageParts.length - 1;
         pageParts[idx] = pageParts[idx].replace(
             '\n',
-            `\nimport ${chosenName} from './components/${chosenName}/${chosenName}.js';\n`
+            `\nimport ${chosenName} from './components/${chosenName}.js';\n`
         );
         pageContents = pageParts.join('\nimport');
         fs.writeFileSync(pagePath, pageContents, 'utf8');
         console.log(`✔ Imported SubComponent into src/pages/${pageName}/${pageName}Page.js.`);
     } else if (chosenType === 'SubComponent' && parent.match(/^components\//)) {
         const [, parentName] = parent.split('/');
-        const componentPath = `${srcDir}/components/${parentName}/${parentName}.js`;
+        const componentPath = `${srcDir}/src/components/${parentName}/${parentName}.js`;
         let componentContents = fs.readFileSync(componentPath, 'utf8');
         let componentParts = componentContents.split('\nimport');
         const idx = componentParts.length - 1;
         componentParts[idx] = componentParts[idx].replace(
             '\n',
-            `\nimport ${chosenName} from './components/${chosenName}/${chosenName}.js';\n`
+            `\nimport ${chosenName} from './components/${chosenName}.js';\n`
         );
         componentContents = componentParts.join('\nimport');
         fs.writeFileSync(componentPath, componentContents, 'utf8');
@@ -412,7 +412,7 @@ function getSrcDest(type, name, parent) {
                 'templates/SubComponent/SubComponent.js',
             ],
             dest: [
-                `${parent}/components/__name__/__name__.js`,
+                `${parent}/components/__name__.js`,
             ],
         };
     } else if (type === 'hook') {

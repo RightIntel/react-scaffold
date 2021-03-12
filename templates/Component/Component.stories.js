@@ -3,21 +3,9 @@ import __name__ from './__name__.js';
 // import any items you need; including a Component.stories.css if applicable
 // TODO: delete this comment block
 
-const markdown = `
-&lt;__name__ /&gt; is... TODO: explain this component in markdown
-
-`;
-
 export default {
 	title: 'Sharpr/components/__name__',
 	component: __name__,
-	parameters: {
-		docs: {
-			description: {
-				component: markdown,
-			},
-		},
-	},
 };
 
 // The name any exported functions become a label under Sharpr/components/__name__.
