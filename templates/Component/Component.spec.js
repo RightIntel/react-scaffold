@@ -19,12 +19,12 @@ describe('__name__', () => {
         expect(__name__).toBeInstanceOf(Function);
     });
     it('should render correctly', () => {
-        const { container } = render(<Example />);
+        const { container } = render(<Example {...Example.args} />);
         expect(container).toMatchSnapshot();
     });
     // TODO: add tests then delete this comment
     it('EXAMPLE: should respond to clicks', () => {
-        const { container, getByText } = render(<Example />);
+        const { container, getByText } = render(<Example {...Example.args} />);
         fireEvent.click(getByText('One'));
         expect(getByText('One')).toHaveClass('open');
         expect(container).toMatchSnapshot();
