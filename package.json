@@ -1,13 +1,13 @@
 {
   "name": "sh-react-scaffold",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Scaffolder for react components",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "react-scaffold": "./src/scaffold.js"
+    "sh-react-scaffold": "./src/scaffold.js"
   },
   "repository": {
     "type": "git",
