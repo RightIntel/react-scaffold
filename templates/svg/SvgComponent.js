@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Svg__name__({
+export default function __name__({
 	width = __width__,
 	height = __height__,
 	className = '',
@@ -20,7 +20,7 @@ export default function Svg__name__({
 	);
 }
 
-Svg__name__.propTypes = {
+__name__.propTypes = {
 	/** width in pixels */
 	width: PropTypes.number,
 	/** height in pixels */

@@ -5,6 +5,7 @@ const __name__Route = {
     exact: true,
     component: lazy(() => import('./__name__Page.js')),
     permission: __perms__,
+    pageName: "TODO: Name this page",
     description: __description__,
 };
 
