@@ -1,6 +1,6 @@
 {
   "name": "sh-react-scaffold",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "Scaffolder for react components",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/RightIntel/react-scaffold#readme",
   "dependencies": {
-    "chalk": "5.2.0",
+    "chalk": "4.1.2",
     "lodash.template": "4.5.0",
     "make-dir": "3.1.0",
     "prompts": "2.4.2"
