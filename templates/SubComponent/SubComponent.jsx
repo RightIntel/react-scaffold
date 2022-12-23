@@ -19,16 +19,18 @@ export default function __name__({
         setValue(evt.target.value);
     }
 
-    function handleClick() {}
+    function handleClick() {
+        alert('You clicked!');
+    }
 }
 
 __name__.propTypes = {
     /** TODO: explain this prop */
     value: PropTypes.string,
     /** TODO: explain this prop */
-    setValue: PropTypes.func.isRequired,
+    setValue: PropTypes.func,
     /** An additional className to apply to this component */
     className: PropTypes.string,
     /** Child elements */
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
 };

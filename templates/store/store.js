@@ -1,49 +1,43 @@
-import { createStore } from 'react-create-use-store';
+import { Store, useStoreSelector } from 'react-thermals';
 import api from '../../libs/api/api.js';
 
-const initialState = {
-    a: 1,
-    message: '',
-    hasError: false,
-    error: null,
-    data: [],
-};
+const store = new Store({
+    state: {
+        a: 1,
+        message: '',
+        hasError: false,
+        error: null,
+        data: [],
+    },
+    actions: {
+        /**
+         * TODO: add docs
+         * @param {Number} id
+         */
+        loadData(id) {
+            const state = store.getState();
+            api.get(`/foobar/${state.a}/${id}`).then(
+                response => store.setState(old => ({ ...old, data: response.data })),
+                error => store.setState(old => ({ ...old, hasError: true, error }))
+            );
+        },
+        /**
+         * TODO: add docs
+         * @param {Object} newThing
+         */
+        createSomething(newThing) {
+            const state = store.getState();
+            store.setState(old => ({ ...old, message: 'Creating' }));
+            api.post(`/foobar/${state.a}`, newThing).then(
+                response => store.setState(old => ({ ...old, message: 'Created ok' })),
+                error => store.setState(old => ({ ...old, error }))
+            );
+        }
+    }
+});
 
-const actions = {
-    // functions defined below
-    loadData,
-    createSomething,
-};
-
-const __name__Store = createStore({ state: initialState, actions });
-
-export default __name__Store;
-
-//
-// Functions only beyond this point
-//
-
-/**
- * TODO: add docs
- * @param {Number} id
- */
-function loadData(id) {
-    const { state, setState } = __name__Store;
-    api.get(`/foobar/${state.a}/${id}`).then(
-        response => setState(old => ({ ...old, data: response.data })),
-        error => setState(old => ({ ...old, hasError: true, error }))
-    );
-}
-
-/**
- * TODO: add docs
- * @param {Promise<Boolean>} newThing
- */
-function createSomething(newThing) {
-    const { state, setState } = __name__Store;
-    api.post(`/foobar/${state.a}`, newThing).then(
-        response => setState(old => ({ ...old, message: 'Created ok' })),
-        error => setState(old => ({ ...old, error }))
-    );
-    setState(old => ({ ...old, message: 'Creating' }));
+export const __name__Store = store;
+export const __name__Actions = store.actions;
+export default function use__Name__(selector) {
+    return useStoreSelector(store, selector);
 }

@@ -6,6 +6,7 @@ const prompts = require('prompts');
 const chalk = require('chalk');
 const mkdir = require('make-dir');
 const template = require('lodash.template');
+
 // local functions
 const getSourceDir = require('./lib/getSourceDir.js');
 const getValidPermissions = require('./lib/getValidPermissions.js');
@@ -180,7 +181,7 @@ async function main() {
         return;
     }
 
-    let chosenPath, pathVariables, pageTitle, pageSubtitle, pageDescription, pagePerms, svgWidth, svgHeight;
+    let chosenPath, pathVariables, pageTitle, pageSubtitle, pageDescription, pagePerms, pageLayout, svgWidth, svgHeight;
     if (chosenType === 'Page') {
         // ask for page url
         const { url } = await prompts({
@@ -206,29 +207,48 @@ async function main() {
         }
         chosenPath = url;
         pathVariables = getPathVariables(url);
-        // ask for page title
-        const { title } = await prompts({
-            type: 'text',
-            name: 'title',
-            message: 'Enter the page title (Large text next to logo)',
-            initial: chosenName,
+        // ask for page layout
+        const { layout } = await prompts({
+            type: 'select',
+            name: 'layout',
+            message: 'Page layout?',
+            choices: [
+                { value: 'loggedin', title: 'A logged-in page' },
+                { value: 'loggedout', title: 'A logged-out page' },
+                { value: 'admin', title: 'A page with left admin menu' },
+                { value: 'empty', title: 'An empty page' },
+            ],
         });
-        if (!title) {
+        if (!layout) {
             console.log('No files created.');
             return;
         }
-        pageTitle = title;
-        // ask for page subtitle
-        const { subtitle } = await prompts({
-            type: 'text',
-            name: 'subtitle',
-            message: 'Enter the page subtitle (Small text next to logo)',
-        });
-        if (!subtitle) {
-            console.log('No files created.');
-            return;
+        pageLayout = layout;
+        if (pageLayout !== 'empty') {
+            // ask for page title
+            const { title } = await prompts({
+                type: 'text',
+                name: 'title',
+                message: 'Enter the page title (Large text next to logo)',
+                initial: chosenName,
+            });
+            if (!title) {
+                console.log('No files created.');
+                return;
+            }
+            pageTitle = title;
+            // ask for page subtitle
+            const { subtitle } = await prompts({
+                type: 'text',
+                name: 'subtitle',
+                message: 'Enter the page subtitle (Small text next to logo)',
+            });
+            if (!subtitle) {
+                console.log('No files created.');
+                return;
+            }
+            pageSubtitle = subtitle;
         }
-        pageSubtitle = subtitle;
         // ask for page/route description
         const { description } = await prompts({
             type: 'text',
@@ -284,7 +304,7 @@ async function main() {
         svgHeight = height;
     }
 
-    const { src, dest } = getSrcDest(chosenType, chosenName, parent);
+    const { src, dest } = getSrcDest(chosenType, chosenName, parent, pageLayout);
     console.log(chalk.yellow('The following files will be created:'));
     console.log(chalk.cyan(dest.join('\n')));
 
@@ -306,6 +326,7 @@ async function main() {
         let content = fs.readFileSync(tplPath, 'utf8');
         // all files
         content = content.replace(/__name__/g, chosenName);
+        content = content.replace(/__Name__/g, chosenName.slice(0,1).toUpperCase() + chosenName.slice(1));
         // only md(x) files
         content = content.replace(/\*\*name\*\*/g, chosenName);
         // only Route.js files
@@ -375,13 +396,13 @@ async function main() {
     }
 }
 
-function getSrcDest(type, name, parent) {
+function getSrcDest(type, name, parent, layout) {
     let spec;
     if (type === 'Page') {
         spec = {
             src: [
                 'templates/Page/Page.css',
-                'templates/Page/Page.js.tpl',
+                `templates/Page/Page-${layout}.js.tpl`,
                 'templates/Page/Route.js',
             ],
             dest: [

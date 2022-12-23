@@ -1,5 +1,5 @@
 import React from 'react';
-import __name__ from './__name__.js';
+import __name__ from './__name__.jsx';
 // import any items you need; including a Component.stories.css if applicable
 // TODO: delete this comment block
 
@@ -28,7 +28,7 @@ Example.args = {
 // On occasion your example will have external data or supporting code
 // that you don't want to show behind the "Show code" button.
 // In that case, pass a string to the "code" below
-// TODO: delete this comment or the following code
+// TODO: delete this comment OR delete the following code
 Example.parameters = {
 	docs: {
 		source: {

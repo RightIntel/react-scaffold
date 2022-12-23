@@ -1,5 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks';
 import __name__ from './__name__.js';
+// --- Docs on react hook testing ---
+// renderHook examples
+// https://betterprogramming.pub/test-custom-hooks-using-react-hooks-testing-library-a3a37031a9be
+// Advanced uses of mocking
+// https://jestjs.io/docs/en/mock-function-api
 
 describe('__name__', () => {
     // TODO: add tests then delete this comment
