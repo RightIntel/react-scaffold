@@ -336,7 +336,7 @@ async function main() {
         // only Svg Components
         content = content.replace(/__width__/g, svgWidth);
         content = content.replace(/__height__/g, svgHeight);
-        // only Page.js.tpl (use lodash templates)
+        // only Page-{layout}.jsx.tpl (use lodash templates)
         if (src.match(/\.tpl$/)) {
             content = template(content)({
                 type: chosenType,
@@ -369,30 +369,30 @@ async function main() {
         );
     } else if (chosenType === 'SubComponent' && parent.match(/^pages\//)) {
         const [, pageName] = parent.split('/');
-        const pagePath = `${srcDir}/${parent}/${pageName}Page.js`;
+        const pagePath = `${srcDir}/${parent}/${pageName}Page.jsx`;
         let pageContents = fs.readFileSync(pagePath, 'utf8');
         let pageParts = pageContents.split('\nimport');
         const idx = pageParts.length - 1;
         pageParts[idx] = pageParts[idx].replace(
             '\n',
-            `\nimport ${chosenName} from './components/${chosenName}.js';\n`
+            `\nimport ${chosenName} from './components/${chosenName}.jsx';\n`
         );
         pageContents = pageParts.join('\nimport');
         fs.writeFileSync(pagePath, pageContents, 'utf8');
-        console.log(`✔ Imported SubComponent into src/pages/${pageName}/${pageName}Page.js.`);
+        console.log(`✔ Imported SubComponent into src/pages/${pageName}/${pageName}Page.jsx.`);
     } else if (chosenType === 'SubComponent' && parent.match(/^components\//)) {
         const [, parentName] = parent.split('/');
-        const componentPath = `${srcDir}/${parent}/${parentName}.js`;
+        const componentPath = `${srcDir}/${parent}/${parentName}.jsx`;
         let componentContents = fs.readFileSync(componentPath, 'utf8');
         let componentParts = componentContents.split('\nimport');
         const idx = componentParts.length - 1;
         componentParts[idx] = componentParts[idx].replace(
             '\n',
-            `\nimport ${chosenName} from './components/${chosenName}.js';\n`
+            `\nimport ${chosenName} from './components/${chosenName}.jsx';\n`
         );
         componentContents = componentParts.join('\nimport');
         fs.writeFileSync(componentPath, componentContents, 'utf8');
-        console.log(`✔ Imported SubComponent into src/components/${parentName}/${parentName}.js.`);
+        console.log(`✔ Imported SubComponent into src/components/${parentName}/${parentName}.jsx.`);
     }
 }
 
@@ -402,12 +402,12 @@ function getSrcDest(type, name, parent, layout) {
         spec = {
             src: [
                 'templates/Page/Page.css',
-                `templates/Page/Page-${layout}.js.tpl`,
+                `templates/Page/Page-${layout}.jsx.tpl`,
                 'templates/Page/Route.js',
             ],
             dest: [
                 'pages/__name__/__name__Page.css',
-                'pages/__name__/__name__Page.js',
+                'pages/__name__/__name__Page.jsx',
                 'pages/__name__/__name__Route.js',
             ],
         };
@@ -415,24 +415,24 @@ function getSrcDest(type, name, parent, layout) {
         spec = {
             src: [
                 'templates/Component/Component.css',
-                'templates/Component/Component.js',
-                'templates/Component/Component.spec.js',
-                'templates/Component/Component.stories.js',
+                'templates/Component/Component.jsx',
+                'templates/Component/Component.spec.jsx',
+                'templates/Component/Component.stories.jsx',
             ],
             dest: [
                 'components/__name__/__name__.css',
-                'components/__name__/__name__.js',
-                'components/__name__/__name__.spec.js',
-                'components/__name__/__name__.stories.js',
+                'components/__name__/__name__.jsx',
+                'components/__name__/__name__.spec.jsx',
+                'components/__name__/__name__.stories.jsx',
             ],
         };
     } else if (type === 'SubComponent') {
         spec = {
             src: [
-                'templates/SubComponent/SubComponent.js',
+                'templates/SubComponent/SubComponent.jsx',
             ],
             dest: [
-                `${parent}/components/__name__.js`,
+                `${parent}/components/__name__.jsx`,
             ],
         };
     } else if (type === 'hook') {
@@ -499,10 +499,10 @@ function getSrcDest(type, name, parent, layout) {
         // other lib names must be functions
         spec = {
             src: [
-                'templates/svg/SvgComponent.js',
+                'templates/svg/SvgComponent.jsx',
             ],
             dest: [
-                'components/Svg/__name__.js',
+                'components/Svg/__name__.jsx',
             ],
         };
     } else {
